@@ -68,5 +68,18 @@ ENGINE_CONFIGS: Dict[str, Dict[str, Any]] = {
                 "stop": [""]
             }
         }
+    },
+    "meta-llama/Meta-Llama-3-8B-Instruct": {
+        "constructor": ChatOpenAI,
+        "params": {
+            "model": "meta-llama/Meta-Llama-3-8B-Instruct",
+            "openai_api_key": "EMPTY",
+            "openai_api_base": "/v1",
+            "max_tokens": 600,
+            "temperature": 0,
+            "model_kwargs": {
+                "stop": [""]
+            }
+        }
     }
 }

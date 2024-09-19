@@ -14,9 +14,11 @@ def get_db_all_tables(db_path: str) -> List[str]:
         List[str]: A list of table names.
     """
     try:
+
         raw_table_names = execute_sql(db_path, "SELECT name FROM sqlite_master WHERE type='table';")
+        # print("has raw table names")
         return [table[0].replace('\"', '').replace('`', '') for table in raw_table_names if table[0] != "sqlite_sequence"]
-    except Exception as e:
+    except Exception as e: 
         logging.error(f"Error in get_db_all_tables: {e}")
         raise e
 

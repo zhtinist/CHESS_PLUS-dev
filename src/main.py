@@ -15,6 +15,7 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run the pipeline with the specified configuration.")
     parser.add_argument('--data_mode', type=str, required=True, help="Mode of the data to be processed.")
     parser.add_argument('--data_path', type=str, required=True, help="Path to the data file.")
+    # parser.add_argument('--quesion_json_path', type=str, required=True, help="Path to the question json file.")
     parser.add_argument('--pipeline_nodes', type=str, required=True, help="Pipeline nodes configuration.")
     parser.add_argument('--pipeline_setup', type=str, required=True, help="Pipeline setup in JSON format.")
     parser.add_argument('--use_checkpoint', action='store_true', help="Flag to use checkpointing.")
@@ -44,21 +45,29 @@ def load_dataset(data_path: str) -> List[Dict[str, Any]]:
     Returns:
         List[Dict[str, Any]]: The loaded dataset.
     """
+    # print("is in load dataset")
     with open(data_path, 'r') as file:
         dataset = json.load(file)
     return dataset
+
 
 def main():
     """
     Main function to run the pipeline with the specified configuration.
     """
+    # print("in main")
     args = parse_arguments()
+    # print("args parsed")
     dataset = load_dataset(args.data_path)
-
+    # print("dataset loaded")
     run_manager = RunManager(args)
+    # print("run manager created")
     run_manager.initialize_tasks(dataset)
+    # print('tasks initialized')  
     run_manager.run_tasks()
+    # print('tasks run')
     run_manager.generate_sql_files()
+    # print('sql files generated')
 
 if __name__ == '__main__':
     main()

@@ -133,6 +133,7 @@ class DatabaseManager:
         else:
             raise Exception(f"Error loading Vector DB for {self.db_id}")
 
+    
     def get_column_profiles(self, schema_with_examples: Dict[str, List[str]], 
                             use_value_description: bool, with_keys: bool, 
                             with_references: bool) -> Dict[str, Dict[str, str]]:

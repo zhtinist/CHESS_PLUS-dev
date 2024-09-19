@@ -60,13 +60,15 @@ class RunManager:
                 data = {"question_id": i, **data}
             task = Task(data)
             self.tasks.append(task)
+            # print(f"Task {i} initialized.")
         self.total_number_of_tasks = len(self.tasks)
-        print(f"Total number of tasks: {self.total_number_of_tasks}")
+        # print(f"Total number of tasks: {self.total_number_of_tasks}")
 
     def run_tasks(self):
         """Runs the tasks using a pool of workers."""
         with Pool(NUM_WORKERS) as pool:
             for task in self.tasks:
+                # print(f"Running task: {task.db_id} {task.question_id}")
                 pool.apply_async(self.worker, args=(task,), callback=self.task_done)
             pool.close()
             pool.join()
@@ -81,16 +83,27 @@ class RunManager:
         Returns:
             tuple: The state of the task processing and task identifiers.
         """
+        # print(f"Processing task: {task.db_id} {task.question_id}")
+        # input("Press any key to continue...")
         database_manager = DatabaseManager(db_mode=self.args.data_mode, db_id=task.db_id)
+        # print("database manager created")
         logger = Logger(db_id=task.db_id, question_id=task.question_id, result_directory=self.result_directory)
+        # print("logger created")
         logger._set_log_level(self.args.log_level)
+        # print("log level set")
         logger.log(f"Processing task: {task.db_id} {task.question_id}", "info")
         pipeline_manager = PipelineManager(json.loads(self.args.pipeline_setup))
+        # print("pipeline manager created")
         try:
+            # print("have a try")
             tentative_schema, execution_history = self.load_checkpoint(task.db_id, task.question_id)
+            # print("checkpoint loaded")
             initial_state = {"keys": {"task": task, 
                                       "tentative_schema": tentative_schema, "execution_history": execution_history}}
+            # print("initial state created")
             self.app = build_pipeline(self.args.pipeline_nodes)
+            # print("pipeline built")
+            # input("Press any key to continue...")
             for state in self.app.stream(initial_state):
                 continue
             return state['__end__'], task.db_id, task.question_id
@@ -132,6 +145,7 @@ class RunManager:
 
     def load_checkpoint(self, db_id, question_id) -> Dict[str, List[str]]:
         tentative_schema = DatabaseManager().get_db_schema()
+        # print("tentative schema loaded")
         execution_history = []
         if self.args.use_checkpoint:
             checkpoint_file = Path(self.args.checkpoint_dir) / f"{question_id}_{db_id}.json"
@@ -165,6 +179,8 @@ class RunManager:
                             if node_type not in sqls:
                                 sqls[node_type] = {}
                             sqls[node_type][question_id] = step["SQL"]
+        # print("SQLs generated.")
+        # input("Press any key to continue...")
         for key, value in sqls.items():
             with open(os.path.join(self.result_directory, f"-{key}.json"), 'w') as f:
                 json.dump(value, f, indent=4)
