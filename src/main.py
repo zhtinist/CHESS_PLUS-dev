@@ -64,8 +64,10 @@ def main():
     # print("run manager created")
     run_manager.initialize_tasks(dataset)
     # print('tasks initialized')  
+    # input('Press any key to run tasks')
     run_manager.run_tasks()
     # print('tasks run')
+    input('Press any key to generate sql files')
     run_manager.generate_sql_files()
     # print('sql files generated')
 

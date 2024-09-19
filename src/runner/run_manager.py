@@ -66,9 +66,9 @@ class RunManager:
 
     def run_tasks(self):
         """Runs the tasks using a pool of workers."""
+        # input("number of workers: " + str(NUM_WORKERS))
         with Pool(NUM_WORKERS) as pool:
             for task in self.tasks:
-                # print(f"Running task: {task.db_id} {task.question_id}")
                 pool.apply_async(self.worker, args=(task,), callback=self.task_done)
             pool.close()
             pool.join()
@@ -102,7 +102,7 @@ class RunManager:
                                       "tentative_schema": tentative_schema, "execution_history": execution_history}}
             # print("initial state created")
             self.app = build_pipeline(self.args.pipeline_nodes)
-            # print("pipeline built")
+            #print("pipeline built")
             # input("Press any key to continue...")
             for state in self.app.stream(initial_state):
                 continue

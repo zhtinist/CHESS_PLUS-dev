@@ -66,7 +66,7 @@ pipeline_setup='{
     "candidate_generation": {
         "engine": "'${engine6}'",
         "temperature": 0.0,
-        "base_uri": "http://localhost:8000",
+        "base_uri": "http://localhost:8002",
         "sampling_count": 1
     },
     "revision": {
