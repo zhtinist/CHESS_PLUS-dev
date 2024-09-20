@@ -34,7 +34,7 @@ def parse_arguments() -> argparse.Namespace:
             raise ValueError('Please provide the checkpoint path to use checkpoint')
 
     return args
-
+ 
 def load_dataset(data_path: str) -> List[Dict[str, Any]]:
     """
     Loads the dataset from the specified path.
@@ -55,21 +55,13 @@ def main():
     """
     Main function to run the pipeline with the specified configuration.
     """
-    # print("in main")
     args = parse_arguments()
-    # print("args parsed")
     dataset = load_dataset(args.data_path)
-    # print("dataset loaded")
     run_manager = RunManager(args)
-    # print("run manager created")
     run_manager.initialize_tasks(dataset)
-    # print('tasks initialized')  
-    # input('Press any key to run tasks')
     run_manager.run_tasks()
-    # print('tasks run')
-    input('Press any key to generate sql files')
     run_manager.generate_sql_files()
-    # print('sql files generated')
+
 
 if __name__ == '__main__':
     main()

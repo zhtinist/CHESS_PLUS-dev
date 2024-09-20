@@ -78,6 +78,7 @@ def build_pipeline(pipeline_nodes: str) -> Callable:
         Callable: The compiled workflow application.
     """
     builder = WorkflowBuilder()
+    # print(pipeline_nodes)
     builder.build(pipeline_nodes)
     app = builder.workflow.compile()
     logging.info("Pipeline built and compiled successfully")

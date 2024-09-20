@@ -78,7 +78,7 @@ ENGINE_CONFIGS: Dict[str, Dict[str, Any]] = {
             "max_tokens": 600,
             "temperature": 0,
             "model_kwargs": {
-                "stop": [""]
+                "stop": ["```\n", ";"]
             }
         }
     }

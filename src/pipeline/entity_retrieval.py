@@ -9,7 +9,20 @@ from langchain_openai import OpenAIEmbeddings
 from runner.database_manager import DatabaseManager
 from pipeline.utils import node_decorator, get_last_node_result
 
-EMBEDDING_FUNCTION = OpenAIEmbeddings(model="text-embedding-3-small")
+# EMBEDDING_FUNCTION = OpenAIEmbeddings(model="text-embedding-3-small")
+from transformers.utils import is_torch_cuda_available, is_torch_mps_available
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
+# 词嵌入模型
+import torch
+
+# 检查CUDA是否可用
+if torch.cuda.is_available():
+    EMBEDDING_DEVICE = "cuda"
+else:
+    EMBEDDING_DEVICE = "cpu"
+    
+EMBEDDING_FUNCTION = HuggingFaceEmbeddings(model_name='moka-ai/m3e-base', model_kwargs={'device': EMBEDDING_DEVICE})
 
 @node_decorator(check_schema_status=False)
 def entity_retrieval(task: Any, tentative_schema: Dict[str, Any], execution_history: List[Dict[str, Any]]) -> Dict[str, Any]:

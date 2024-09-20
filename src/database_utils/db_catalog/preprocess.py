@@ -10,7 +10,18 @@ from database_utils.db_catalog.csv_utils import load_tables_description
 
 load_dotenv(override=True)
 
-EMBEDDING_FUNCTION = OpenAIEmbeddings(model="text-embedding-3-large")
+# EMBEDDING_FUNCTION = OpenAIEmbeddings(model="text-embedding-3-large")
+
+from transformers.utils import is_torch_cuda_available, is_torch_mps_available
+from langchain_community.embeddings import HuggingFaceEmbeddings
+import torch
+
+# 检查CUDA是否可用
+if torch.cuda.is_available():
+    EMBEDDING_DEVICE = "cuda"
+else:
+    EMBEDDING_DEVICE = "cpu"
+EMBEDDING_FUNCTION = HuggingFaceEmbeddings(model_name='moka-ai/m3e-base', model_kwargs={'device': EMBEDDING_DEVICE})
 
 # TEXT2VEC EMBEDDING FUNCTION
 import warnings

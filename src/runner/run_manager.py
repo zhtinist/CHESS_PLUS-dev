@@ -69,7 +69,9 @@ class RunManager:
         # input("number of workers: " + str(NUM_WORKERS))
         with Pool(NUM_WORKERS) as pool:
             for task in self.tasks:
+                # print(task)
                 pool.apply_async(self.worker, args=(task,), callback=self.task_done)
+                # print("pipeline built1")
             pool.close()
             pool.join()
 
@@ -102,10 +104,13 @@ class RunManager:
                                       "tentative_schema": tentative_schema, "execution_history": execution_history}}
             # print("initial state created")
             self.app = build_pipeline(self.args.pipeline_nodes)
-            #print("pipeline built")
+            # print(initial_state)
             # input("Press any key to continue...")
+            # print(self.app.stream(initial_state))
             for state in self.app.stream(initial_state):
+                # print('test message')
                 continue
+            
             return state['__end__'], task.db_id, task.question_id
         except Exception as e:
             logger.log(f"Error processing task: {task.db_id} {task.question_id}\n{e}", "error")
@@ -119,6 +124,7 @@ class RunManager:
             log (tuple): The log information of the task processing.
         """
         state, db_id, question_id = log
+        # print(f'{1} {state}')
         if state is None:
             return
         evaluation_result = state["keys"]['execution_history'][-1]

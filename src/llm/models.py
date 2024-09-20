@@ -133,10 +133,10 @@ def async_llm_chain_call(prompt: Any, engine: Any, parser: Any, request_list: Li
 
     with ThreadPoolExecutor(max_workers=len(request_list) * sampling_count) as executor:
         for request_id, request_kwargs in enumerate(request_list):
+            # print(f'{request_id} {request_kwargs}')
             for _ in range(sampling_count):
                 executor.submit(threaded_llm_call, request_id, prompt, engine, parser, request_kwargs, step, result_queue, log_file_lock)
                 time.sleep(0.2)  # Sleep for a short time to avoid rate limiting
-
     results = []
     while not result_queue.empty():
         results.append(result_queue.get())

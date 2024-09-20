@@ -25,7 +25,6 @@ def keyword_extraction(task: Any, tentative_schema: Dict[str, Any], execution_hi
     
     logging.info("Fetching prompt, engine, and parser from PipelineManager")
     prompt, engine, parser = PipelineManager().get_prompt_engine_parser()
-    
     logging.info("Initiating asynchronous LLM chain call for keyword extraction")
     response = async_llm_chain_call(
         prompt=prompt, 
@@ -35,7 +34,7 @@ def keyword_extraction(task: Any, tentative_schema: Dict[str, Any], execution_hi
         step="keyword_extraction",
         sampling_count=1
     )[0]
-    
+    # print(f'response {prompt}')
     keywords = response[0]
     result = {"keywords": keywords}
     
