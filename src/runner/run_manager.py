@@ -85,30 +85,17 @@ class RunManager:
         Returns:
             tuple: The state of the task processing and task identifiers.
         """
-        # print(f"Processing task: {task.db_id} {task.question_id}")
-        # input("Press any key to continue...")
         database_manager = DatabaseManager(db_mode=self.args.data_mode, db_id=task.db_id)
-        # print("database manager created")
         logger = Logger(db_id=task.db_id, question_id=task.question_id, result_directory=self.result_directory)
-        # print("logger created")
         logger._set_log_level(self.args.log_level)
-        # print("log level set")
         logger.log(f"Processing task: {task.db_id} {task.question_id}", "info")
         pipeline_manager = PipelineManager(json.loads(self.args.pipeline_setup))
-        # print("pipeline manager created")
         try:
-            # print("have a try")
             tentative_schema, execution_history = self.load_checkpoint(task.db_id, task.question_id)
-            # print("checkpoint loaded")
             initial_state = {"keys": {"task": task, 
                                       "tentative_schema": tentative_schema, "execution_history": execution_history}}
-            # print("initial state created")
             self.app = build_pipeline(self.args.pipeline_nodes)
-            # print(initial_state)
-            # input("Press any key to continue...")
-            # print(self.app.stream(initial_state))
             for state in self.app.stream(initial_state):
-                # print('test message')
                 continue
             
             return state['__end__'], task.db_id, task.question_id
@@ -124,7 +111,6 @@ class RunManager:
             log (tuple): The log information of the task processing.
         """
         state, db_id, question_id = log
-        # print(f'{1} {state}')
         if state is None:
             return
         evaluation_result = state["keys"]['execution_history'][-1]
