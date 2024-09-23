@@ -111,6 +111,7 @@ class RunManager:
             log (tuple): The log information of the task processing.
         """
         state, db_id, question_id = log
+
         if state is None:
             return
         evaluation_result = state["keys"]['execution_history'][-1]
